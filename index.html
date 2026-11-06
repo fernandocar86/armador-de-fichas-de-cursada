@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fichas de estudiantes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<main>
+<h1>Fichas de estudiantes</h1>
+<p class="lead">Cargá la planilla de notas y la de consignas, revisá la lista de estudiantes y descargá las fichas en PDF. Todo se procesa en tu navegador: los archivos no se suben a ningún servidor.</p>
+
+<section class="sheet">
+  <div class="row">
+    <div><label for="year">Año de cursada</label><input type="number" id="year" placeholder="2026"></div>
+    <div><label for="docente">Docente o comisión</label><input type="text" id="docente" placeholder="Carranza"></div>
+  </div>
+
+  <span class="lab">Planilla con las notas<span class="hint">Excel con Apellido, Nombre, Promedio, Observaciones y las columnas de cada parcial</span></span>
+  <div class="file">
+    <input type="file" id="fgen" accept=".xlsx,.xls"><label class="btn" for="fgen" style="margin:0">Elegir archivo</label>
+    <span class="fname" id="ngen">Ningún archivo</span>
+  </div>
+
+  <span class="lab">Planilla con las consignas<span class="hint">Excel con las columnas Parciales, Temas y Consignas</span></span>
+  <div class="file">
+    <input type="file" id="fcon" accept=".xlsx,.xls"><label class="btn" for="fcon" style="margin:0">Elegir archivo</label>
+    <span class="fname" id="ncon">Ningún archivo</span>
+  </div>
+
+  <div class="actions"><button class="btn primary" id="go" disabled>Revisar estudiantes</button></div>
+  <div id="msg" role="status"></div>
+</section>
+
+<section id="result" hidden>
+  <h2 id="count"></h2>
+  <p class="lead" style="margin:0">Revisá que no haya una misma persona escrita dos veces con grafía distinta. Si hay errores, corregí las planillas y volvé a cargarlas.</p>
+  <ul class="names" id="names"></ul>
+  <div class="actions">
+    <button class="btn primary" id="dl5">Descargar fichas (una por página)</button>
+    <button class="btn" id="dl4">Descargar fichas (dos por hoja A4)</button>
+  </div>
+</section>
+
+<details>
+  <summary>Formato esperado de las planillas</summary>
+  <p>Consignas: una fila por consigna, con <code>Parciales</code> (por ejemplo «Parcial 1»), <code>Temas</code> (por ejemplo «Tema 1») y <code>Consignas</code>.</p>
+<style>
+  .tabla-consignas {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+    margin: 20px 0;
+  }
+
+  .tabla-consignas th {
+    background-color: #263b5a;
+    color: white;
+    padding: 12px;
+    text-align: left;
+  }
+
+  .tabla-consignas td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+  }
+
+  .tabla-consignas tr:nth-child(even) {
+    background-color: #f2f4f7;
+  }
+
+  .tabla-consignas tr:hover {
+    background-color: #e5edf7;
+  }
+</style>
+
+<table class="tabla-consignas">
+  <thead>
+    <tr>
+      <th>Parciales</th>
+      <th>Temas</th>
+      <th>Consignas</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>Parcial 1</td><td>Tema 1</td><td>Pregunta 1</td></tr>
+    <tr><td>Parcial 1</td><td>Tema 1</td><td>Pregunta 2</td></tr>
+    <tr><td>Parcial 1</td><td>Tema 1</td><td>Pregunta 3</td></tr>
+    <tr><td>Parcial 1</td><td>Tema 1</td><td>Pregunta 4</td></tr>
+    <tr><td>Parcial 1</td><td>Tema 2</td><td>Pregunta 1</td></tr>
+    <tr><td>Parcial 1</td><td>Tema 2</td><td>Pregunta 2</td></tr>
+    <tr><td>Parcial 1</td><td>Tema 2</td><td>Pregunta 3</td></tr>
+    <tr><td>Parcial 1</td><td>Tema 2</td><td>Pregunta 4</td></tr>
+    <tr><td>Parcial 1</td><td>Recuperatorio</td><td>Pregunta 1</td></tr>
+    <tr><td>Parcial 1</td><td>Recuperatorio</td><td>Pregunta 2</td></tr>
+    <tr><td>Parcial 1</td><td>Recuperatorio</td><td>Pregunta 3</td></tr>
+    <tr><td>Parcial 1</td><td>Recuperatorio</td><td>Pregunta 4</td></tr>
+    <tr><td>Parcial 2</td><td>Tema 1</td><td>Pregunta 1</td></tr>
+    <tr><td>Parcial 2</td><td>Tema 1</td><td>Pregunta 2</td></tr>
+    <tr><td>Parcial 2</td><td>Tema 1</td><td>Pregunta 3</td></tr>
+    <tr><td>Parcial 2</td><td>Tema 1</td><td>Pregunta 4</td></tr>
+    <tr><td>Parcial 2</td><td>Tema 2</td><td>Pregunta 1</td></tr>
+    <tr><td>Parcial 2</td><td>Tema 2</td><td>Pregunta 2</td></tr>
+    <tr><td>Parcial 2</td><td>Tema 2</td><td>Pregunta 3</td></tr>
+    <tr><td>Parcial 2</td><td>Tema 2</td><td>Pregunta 4</td></tr>
+    <tr><td>Parcial 2</td><td>Recuperatorio</td><td>Pregunta 1</td></tr>
+    <tr><td>Parcial 2</td><td>Recuperatorio</td><td>Pregunta 2</td></tr>
+    <tr><td>Parcial 2</td><td>Recuperatorio</td><td>Pregunta 3</td></tr>
+    <tr><td>Parcial 2</td><td>Recuperatorio</td><td>Pregunta 4</td></tr>
+  </tbody>
+</table>
+<p><a href="consignasmodelo.xlsx" download="consignasmodelo.xlsx"
+   class="boton-descarga">
+   Descargar modelo Excel para completar las consignas
+</a></p>
+
+  <p>Notas: para cada parcial, las columnas se nombran con las mayúsculas y los números del parcial: «Parcial 1» → <code>P1;Tema</code>, <code>P1;C1</code>, <code>P1;C2</code>… y <code>P1;Total</code>. El valor de <code>P1;Tema</code> debe ser <code>P1;T1</code> (o <code>T1</code>). Las fichas solo van a incluir estudiantes con promedio de 4 o más.</p>
+<p><a href="consignasmodelo.xlsx" download="consignasmodelo.xlsx"
+   class="boton-descarga">
+   Descargar modelo Excel para completar las notas de la comisión</a>
+</p>
+
+</details>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
